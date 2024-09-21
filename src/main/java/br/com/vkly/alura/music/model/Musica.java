@@ -14,6 +14,12 @@ public class Musica {
 
     private String album;
 
+    public Musica() {}
+    public Musica(String nomeMusica, String album) {
+        this.nomeMusica = nomeMusica;
+        this.album = album;
+    }
+
     @ManyToOne
     private Artista artista;
 

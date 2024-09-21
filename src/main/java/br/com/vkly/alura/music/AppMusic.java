@@ -11,8 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AppMusic implements CommandLineRunner {
 
     @Autowired
-    private ArtistaRepository repository;
-
+    private ArtistaRepository artistaRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(AppMusic.class, args);
@@ -20,7 +19,7 @@ public class AppMusic implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        FrontEnd frontEnd = new FrontEnd(repository);
+        FrontEnd frontEnd = new FrontEnd(artistaRepository);
         frontEnd.inicio();
     }
 }

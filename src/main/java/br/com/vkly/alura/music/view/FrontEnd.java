@@ -1,13 +1,12 @@
 package br.com.vkly.alura.music.view;
 
 import br.com.vkly.alura.music.controller.AppVkMusicController;
-import br.com.vkly.alura.music.model.ComposicaoArtista;
-import br.com.vkly.alura.music.model.Dados;
-import br.com.vkly.alura.music.model.DadosArtista;
+import br.com.vkly.alura.music.model.*;
 import br.com.vkly.alura.music.repository.ArtistaRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -19,13 +18,13 @@ public class FrontEnd {
 
     private Integer opcaoEscolhida = -1;
 
-    private ArtistaRepository repository;
-    
-    public FrontEnd(ArtistaRepository repositorio) {
-        this.repository = repositorio;
+    private ArtistaRepository artistaRepository;
+
+    public FrontEnd(ArtistaRepository artistaRepository) {
+        this.artistaRepository = artistaRepository;
     }
 
-    public static void main(String[] args) {
+    public static void main(java.lang.String[] args) {
         SpringApplication.run(FrontEnd.class, args);
     }
 
@@ -52,26 +51,34 @@ public class FrontEnd {
                 """;
 
         System.out.println(menu);
-        opcaoEscolhida = leitura.nextInt();
 
-        verificaMenu(opcaoEscolhida);
+        try {
+            opcaoEscolhida = leitura.nextInt();
+            verificaMenu(opcaoEscolhida);
+        } catch (InputMismatchException e) {
+            System.out.println("Opção deve ser númerica!");
+            opcaoEscolhida = 0;
+        }
     }
 
     private  void verificaMenu(Integer opcaoEscolhida) {
         switch (opcaoEscolhida) {
             case 1:
                exibeMenuArtista();
-               
+               break;
             case 2:
                exibeMenuMusica();
+               break;
+            default:
+                System.out.println("Opção Inválida");
         }
     }
 
-    private Dados exibeMenuArtista()  {
+    private void exibeMenuArtista()  {
 
         var cadastrarOutroArtista = "S";
 
-        if (cadastrarOutroArtista.toUpperCase().contains("S")) {
+        while(cadastrarOutroArtista.equalsIgnoreCase("s")) {
             System.out.println("Informe o nome do artista: ");
             leitura.nextLine();
             var nomeArtista = leitura.nextLine();
@@ -82,20 +89,34 @@ public class FrontEnd {
             dadosArtista.setNomeArtista(nomeArtista);
             dadosArtista.setComposicaoArtista(ComposicaoArtista.valueOf(tipoArtista.toUpperCase()));
 
-            var apiAvkm = new AppVkMusicController(repository);
-            apiAvkm.controller(opcaoEscolhida, dadosArtista);
+            var apiAvkm = new AppVkMusicController(artistaRepository);
+            apiAvkm.cadastraArtista(dadosArtista);
 
             System.out.println("Deseja cadastrar outro artista? (S/N)");
             cadastrarOutroArtista = leitura.next();
-
-            if(cadastrarOutroArtista.toUpperCase().contains("S")) {
-                exibeMenuArtista();
-            }
         }
-
-        return dadosArtista;
     }
     private void exibeMenuMusica() {
-        System.out.println();
+
+        System.out.println("Informe o nome da musica: ");
+        leitura.nextLine();
+        var nomeMusica = leitura.nextLine();
+
+        System.out.println("Informe o album da musica: ");
+        var nomeAlbum = leitura.nextLine();
+
+        System.out.println("A musica é de qual Artista? ");
+        var artista = leitura.nextLine();
+
+        var apiAvkm = new AppVkMusicController(artistaRepository);
+        var artistaBuscado = apiAvkm.buscaArtista(artista);
+
+        Musica musica = new Musica(nomeMusica, nomeAlbum);
+        musica.setArtista(artistaBuscado.get());
+
+        artistaBuscado.get().getMusicas().add(musica);
+
+        apiAvkm.cadastraMusica(artistaBuscado.get());
+
     }
 }

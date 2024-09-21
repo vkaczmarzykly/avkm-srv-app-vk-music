@@ -18,14 +18,30 @@ public class Artista {
     @Enumerated(EnumType.STRING)
     private ComposicaoArtista composicaoArtista;
 
-    @OneToMany(mappedBy = "avkm_musicas", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Musica> musicas = new ArrayList<>();
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Musica> getMusicas() {
+        return musicas;
+    }
+
+    public void setMusicas(List<Musica> musicas) {
+        this.musicas = musicas;
+    }
+
+    public Artista() {}
     public Artista(DadosArtista dadosArtista) {
         this.nomeArtista = dadosArtista.getNomeArtista();
         this.composicaoArtista = dadosArtista.getComposicaoArtista();
     }
 
+    public Long getId() {
+        return id;
+    }
     public String getNomeArtista() {
         return nomeArtista;
     }
