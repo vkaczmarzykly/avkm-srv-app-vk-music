@@ -5,7 +5,6 @@ import br.com.vkly.alura.music.model.ComposicaoArtista;
 import br.com.vkly.alura.music.model.Dados;
 import br.com.vkly.alura.music.model.DadosArtista;
 import br.com.vkly.alura.music.repository.ArtistaRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -21,7 +20,7 @@ public class FrontEnd {
     private Integer opcaoEscolhida = -1;
 
     private ArtistaRepository repository;
-
+    
     public FrontEnd(ArtistaRepository repositorio) {
         this.repository = repositorio;
     }
@@ -33,15 +32,11 @@ public class FrontEnd {
     public void inicio() {
 
         while (opcaoEscolhida != 0) {
-            opcaoEscolhida = exibeMenuPrincipal();
-            DadosArtista dados = (DadosArtista) verificaMenu(opcaoEscolhida);
-
-            var apiAvkm = new AppVkMusicController(repository);
-            apiAvkm.controller(opcaoEscolhida, dados);
+            exibeMenuPrincipal();
         }
     }
 
-    public Integer exibeMenuPrincipal() {
+    public void exibeMenuPrincipal() {
 
         var menu = """
                 *** AVKM - App VK Music ***
@@ -57,35 +52,50 @@ public class FrontEnd {
                 """;
 
         System.out.println(menu);
-        return leitura.nextInt();
+        opcaoEscolhida = leitura.nextInt();
+
+        verificaMenu(opcaoEscolhida);
     }
-    private Dados verificaMenu(Integer opcaoEscolhida) {
+
+    private  void verificaMenu(Integer opcaoEscolhida) {
         switch (opcaoEscolhida) {
             case 1:
-               return exibeMenuArtista();
+               exibeMenuArtista();
+               
+            case 2:
+               exibeMenuMusica();
         }
-        return null;
     }
 
     private Dados exibeMenuArtista()  {
 
-        System.out.println("Informe o nome do artista: ");
-        leitura.nextLine();
-        var nomeArtista = leitura.nextLine();
+        var cadastrarOutroArtista = "S";
 
-        System.out.println("Informe o tipo desse artista: (solo, dupla, banda)");
-        var tipoArtista = leitura.nextLine();
+        if (cadastrarOutroArtista.toUpperCase().contains("S")) {
+            System.out.println("Informe o nome do artista: ");
+            leitura.nextLine();
+            var nomeArtista = leitura.nextLine();
 
-        dadosArtista.setNomeArtista(nomeArtista);
-        dadosArtista.setComposicaoArtista(ComposicaoArtista.valueOf(tipoArtista.toUpperCase()));
+            System.out.println("Informe o tipo desse artista (solo, dupla, banda)");
+            var tipoArtista = leitura.nextLine();
+
+            dadosArtista.setNomeArtista(nomeArtista);
+            dadosArtista.setComposicaoArtista(ComposicaoArtista.valueOf(tipoArtista.toUpperCase()));
+
+            var apiAvkm = new AppVkMusicController(repository);
+            apiAvkm.controller(opcaoEscolhida, dadosArtista);
+
+            System.out.println("Deseja cadastrar outro artista? (S/N)");
+            cadastrarOutroArtista = leitura.next();
+
+            if(cadastrarOutroArtista.toUpperCase().contains("S")) {
+                exibeMenuArtista();
+            }
+        }
 
         return dadosArtista;
     }
-
-    private void exibeMenuArtistaTipo() {
-          leitura.nextLine();
-          System.out.println("Informe o tipo desse artista: (solo, dupla, banda): ");
-          var tipoArtista = leitura.nextLine();
-        System.out.println(tipoArtista);
+    private void exibeMenuMusica() {
+        System.out.println();
     }
 }

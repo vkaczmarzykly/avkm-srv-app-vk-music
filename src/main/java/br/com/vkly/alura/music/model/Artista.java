@@ -2,6 +2,9 @@ package br.com.vkly.alura.music.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "avkm_artista")
 public class Artista {
@@ -14,6 +17,9 @@ public class Artista {
 
     @Enumerated(EnumType.STRING)
     private ComposicaoArtista composicaoArtista;
+
+    @OneToMany(mappedBy = "avkm_musicas", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Musica> musicas = new ArrayList<>();
 
     public Artista(DadosArtista dadosArtista) {
         this.nomeArtista = dadosArtista.getNomeArtista();
