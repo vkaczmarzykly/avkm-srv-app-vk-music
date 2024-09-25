@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -69,6 +70,17 @@ public class FrontEnd {
             case 2:
                exibeMenuMusica();
                break;
+            case 3:
+               listaMusicas();
+               break;
+            case 4:
+               buscaMusicasArtista();
+               break;
+            case 5:
+               buscaInfoArtista();
+               break;
+            case 0:
+               break;
             default:
                 System.out.println("Opção Inválida");
         }
@@ -117,6 +129,35 @@ public class FrontEnd {
         artistaBuscado.get().getMusicas().add(musica);
 
         apiAvkm.cadastraMusica(artistaBuscado.get());
+    }
+
+    private void listaMusicas() {
+        var apiAvkm = new AppVkMusicController(artistaRepository);
+        List<Artista> artistas = apiAvkm.buscaTodosArtistas();
+
+        artistas.forEach(a -> a.getMusicas().forEach(System.out::println));
+    }
+
+    private void buscaMusicasArtista() {
+        System.out.println("Informe o artista para visualizar as suas musicas: ");
+        leitura.nextLine();
+        var artista = leitura.nextLine();
+
+        var apiAvkm = new AppVkMusicController(artistaRepository);
+        var artistaBuscado = apiAvkm.buscaArtista(artista);
+
+        artistaBuscado.get().getMusicas().forEach(System.out::println);
+    }
+
+    private void buscaInfoArtista() {
+        System.out.println("Informe o artista para visualizar suas informações: ");
+        leitura.nextLine();
+        var artista = leitura.nextLine();
+
+        var apiAvkm = new AppVkMusicController(artistaRepository);
+        var infoArtista = apiAvkm.buscaInfoArtista(artista);
+
+        System.out.println(infoArtista);
 
     }
 }

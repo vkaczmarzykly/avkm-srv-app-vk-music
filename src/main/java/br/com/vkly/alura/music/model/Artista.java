@@ -57,4 +57,13 @@ public class Artista {
     public void setComposicaoArtista(ComposicaoArtista composicaoArtista) {
         this.composicaoArtista = composicaoArtista;
     }
+
+//    @Override
+//    public String toString() {
+//        return "Artista{" +
+//                "nomeArtista='" + nomeArtista + '\'' +
+//                ", composicaoArtista=" + composicaoArtista +
+//                ", musicas=" + musicas +
+//                '}';
+//    }
 }

@@ -4,6 +4,7 @@ import br.com.vkly.alura.music.model.Artista;
 import br.com.vkly.alura.music.model.DadosArtista;
 import br.com.vkly.alura.music.repository.ArtistaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ArtistaService {
@@ -19,5 +20,9 @@ public class ArtistaService {
 
     public Optional<Artista> buscaArtistaService(String nomeArtista) {
         return repository.findByNomeArtistaContainingIgnoreCase(nomeArtista);
+    }
+
+    public List<Artista> buscaTodosArtistasService() {
+        return repository.findAll();
     }
 }

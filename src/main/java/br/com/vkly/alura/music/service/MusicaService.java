@@ -1,7 +1,10 @@
 package br.com.vkly.alura.music.service;
 
 import br.com.vkly.alura.music.model.Artista;
+import br.com.vkly.alura.music.model.Musica;
 import br.com.vkly.alura.music.repository.ArtistaRepository;
+
+import java.util.List;
 
 public class MusicaService {
 
@@ -14,4 +17,5 @@ public class MusicaService {
     public void cadastraMusicaService(Artista artista) {
         repository.save(artista);
     }
+
 }
